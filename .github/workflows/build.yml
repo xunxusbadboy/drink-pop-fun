@@ -51,6 +51,31 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Render app icons from artwork
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-thai-tlwg
+          python -m pip install --user cairosvg
+          python - <<'PY'
+          import cairosvg
+          from pathlib import Path
+          artwork = 'assets/app_icon.svg'
+          icons = {
+              'assets/app_icon.png': 1024,
+              'web/favicon.png': 48,
+              'web/icons/Icon-192.png': 192,
+              'web/icons/Icon-512.png': 512,
+              'web/icons/Icon-maskable-192.png': 192,
+              'web/icons/Icon-maskable-512.png': 512,
+          }
+          for name, size in icons.items():
+              Path(name).parent.mkdir(parents=True, exist_ok=True)
+              cairosvg.svg2png(url=artwork, write_to=name, output_width=size, output_height=size)
+          PY
+
+      - name: Generate Android launcher icons
+        run: dart run flutter_launcher_icons
+
       - name: Build Web
         run: flutter build web --release --base-href "/drink-pop-fun/"
 
