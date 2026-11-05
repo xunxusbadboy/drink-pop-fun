@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       const SizedBox(height:22),_heading('02 / วันนี้ต้องเจออะไร?'),
       ...List.generate(tasks.length,(i)=>Padding(padding:const EdgeInsets.only(bottom:11),child:_option(tasks[i],taskIcons[i],task==tasks[i],()=>setState((){task=tasks[i];selected=null;})))),
       const SizedBox(height:20),_heading('03 / มีแอลกอฮอล์ไหม?'),
-      SegmentedButton<String>(segments:const [ButtonSegment(value:'none',label:Text('ไม่มี')),ButtonSegment(value:'yes',label:Text('มี')),ButtonSegment(value:'any',label:Text('อะไรก็ได้'))],selected:{alcoholMode},onSelectionChanged:(v)=>setState((){alcoholMode=v.first;selected=null;})),
+      SegmentedButton<String>(segments:const [ButtonSegment(value:'none',label:Text('🚫 ไม่เอาแอลกอฮอล์')),ButtonSegment(value:'yes',label:Text('🍸 ขอแอลกอฮอล์'))],selected:{alcoholMode},onSelectionChanged:(v)=>setState((){alcoholMode=v.first;selected=null;})),
       if(alcoholMode!='none')const Padding(padding:EdgeInsets.only(top:8),child:Text('สำหรับผู้ใหญ่ตามกฎหมายเท่านั้น • ไม่ดื่มแล้วขับ • ไม่เหมาะกับเวลาทำงาน',style:TextStyle(fontSize:12,color:Colors.black54))),
       const SizedBox(height:20),_heading('04 / หวานแค่ไหนดี?'),
       SegmentedButton<int>(segments:const [ButtonSegment(value:10,label:Text('น้อย')),ButtonSegment(value:20,label:Text('ปานกลาง')),ButtonSegment(value:30,label:Text('มาก'))],selected:{sweetMl},onSelectionChanged:(v)=>setState((){sweetMl=v.first;})),
