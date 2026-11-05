@@ -76,6 +76,17 @@ jobs:
       - name: Generate Android launcher icons
         run: dart run flutter_launcher_icons
 
+      - name: Set Android launcher display name
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          import re
+          s = re.sub(r'android:label="[^"]*"', 'android:label="ดื่มไรดี?"', s, count=1)
+          p.write_text(s)
+          PY
+
       - name: Build Web
         run: flutter build web --release --base-href "/drink-pop-fun/"
 
