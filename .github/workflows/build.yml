@@ -39,7 +39,7 @@ jobs:
 
       - name: Run tests
         
-- name: Run tests
+     - name: Run tests
   run: |
     if [ -f test/widget_test.dart ] && grep -q 'const MyApp()' test/widget_test.dart; then
       echo "Removing generated Flutter template test"
