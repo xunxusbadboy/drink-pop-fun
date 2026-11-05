@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       const SizedBox(height:14),OutlinedButton.icon(onPressed:()=>_toggle(d),icon:Icon(favorites.contains(d.id)?Icons.favorite:Icons.favorite_border),label:Text(favorites.contains(d.id)?'บันทึกแล้ว 💖':'เก็บแก้วนี้ไว้')),
     ]));
   @override Widget build(BuildContext context) => Scaffold(
-    appBar:AppBar(backgroundColor:yellow,title:const Text('วันนี้ดื่มไรดี? 🧋',style:TextStyle(fontWeight:FontWeight.w900,color:ink))),
+    appBar:AppBar(backgroundColor:yellow,title:const Text('ดื่มไรดี? 🧋',style:TextStyle(fontWeight:FontWeight.w900,color:ink))),
     bottomNavigationBar:NavigationBar(selectedIndex:tab,onDestinationSelected:(v)=>setState(()=>tab=v),destinations:const [NavigationDestination(icon:Icon(Icons.casino_outlined),label:'สุ่มเมนู'),NavigationDestination(icon:Icon(Icons.favorite_border),label:'เมนูโปรด')]),
     body:SafeArea(child:Center(child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:680),child:ListView(padding:const EdgeInsets.fromLTRB(20,20,20,40),children:tab==1?[
       _heading('💖 แก้วโปรดของเรา'),if(favorites.isEmpty)const Padding(padding:EdgeInsets.all(20),child:Text('ยังไม่มีเมนูโปรด ลองสุ่มแล้วกดหัวใจดู!')),
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     ]:[
       Container(padding:const EdgeInsets.all(20),decoration:BoxDecoration(color:yellow,borderRadius:BorderRadius.circular(30),border:Border.all(color:ink,width:2.5),boxShadow:const [BoxShadow(color:ink,offset:Offset(5,6),blurRadius:0)]),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         const Text('HEY, OFFICE PEOPLE! ✦',style:TextStyle(fontWeight:FontWeight.w900,color:purple,letterSpacing:1)),
-        const SizedBox(height:8),const Text('เช้านี้ดื่มไรดี?',style:TextStyle(fontSize:34,fontWeight:FontWeight.w900,color:ink)),
+        const SizedBox(height:8),const Text('ดื่มไรดี?',style:TextStyle(fontSize:34,fontWeight:FontWeight.w900,color:ink)),
         const Text('งานจะหนักแค่ไหน แก้วนี้ต้องอร่อย!',style:TextStyle(fontSize:16,fontWeight:FontWeight.w600)),
         Center(child:AnimatedBuilder(animation:bounce,builder:(context,child)=>Transform.rotate(angle:rolling ? bounce.value*6.28318 : 0,child:Transform.scale(scale:1+0.08*(1-(bounce.value-0.5).abs()*2),child:child)),child:const PopCup(size:170))),
       ])),
