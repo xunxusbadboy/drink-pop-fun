@@ -1,9 +1,10 @@
 
-name: Build Flutter Web and Android APK
+name: Build Flutter Web and Android
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -11,78 +12,68 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-
-      - name: Create platform files
-        run: flutter create --project-name drink_pop_fun --platforms=web,android .
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Run tests
-        
-     - name: Run tests
-  run: |
-    if [ -f test/widget_test.dart ] && grep -q 'const MyApp()' test/widget_test.dart; then
-      echo "Removing generated Flutter template test"
-      rm test/widget_test.dart
-    fi
-    if find test -name '*_test.dart' -print -quit 2>/dev/null | grep -q .; then
-      flutter test
-    else
-      echo "No application tests found; skipping tests temporarily."
-    fi
-
-
-      - name: Build Web
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
-
-      - name: Build Android APK
-        run: flutter build apk --release
-
-      - name: Upload Web Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: drink-pop-fun-web
-          path: build/web/
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: drink-pop-fun-android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: build/web/
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Check app source
+        run: |
+          test -f pubspec.yaml
+          test -f lib/main.dart
+
+      - name: Generate Flutter platform files
+        run: flutter create --project-name drink_pop_fun --platforms=web,android --no-pub .
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Web
+        run: flutter build web --release --base-href "/drink-pop-fun/"
+
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Upload Web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-web
+          path: build/web
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+      - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
