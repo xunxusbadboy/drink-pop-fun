@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#ff9bb5"/><stop offset=".53" stop-color="#ff2e83"/><stop offset="1" stop-color="#ffc56d"/></linearGradient><linearGradient id="drink" x2="0" y2="1"><stop stop-color="#ff498d"/><stop offset="1" stop-color="#a80053"/></linearGradient></defs>
+<rect width="1024" height="1024" rx="220" fill="url(#bg)"/>
+<path d="M210 230l25 55 55 25-55 25-25 55-25-55-55-25 55-25zM760 110l16 37 37 16-37 16-16-37-37-16 37-16z" fill="#fff"/>
+<path d="M682 250l105-118h90" fill="none" stroke="#fff" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="725" cy="305" r="110" fill="#ffcd43" stroke="#fff5d8" stroke-width="18"/>
+<circle cx="725" cy="305" r="82" fill="none" stroke="#fff6d5" stroke-width="8" stroke-dasharray="7 14"/>
+<path d="M411 258q-80-95-90-58 10 60 90 90M413 258q20-120 76-96 9 71-76 96" fill="#83d533" stroke="#458e1d" stroke-width="10"/>
+<path d="M155 330Q510 260 870 330L790 770Q510 940 235 770Z" fill="url(#drink)" stroke="#fff" stroke-width="22" stroke-linejoin="round"/>
+<path d="M180 340Q510 285 845 340" fill="none" stroke="#ffd9e8" stroke-width="18"/>
+<g fill="#fff" font-family="sans-serif" font-weight="900" text-anchor="middle"><text x="510" y="490" font-size="105">วันนี้</text><text x="510" y="630" font-size="132">ดื่มไรดี?</text></g>
+<text x="510" y="730" text-anchor="middle" font-size="64" font-family="cursive" font-style="italic" fill="#fff">by Señorita</text>
+<circle cx="260" cy="420" r="11" fill="#fff" opacity=".8"/><circle cx="745" cy="690" r="15" fill="#fff" opacity=".7"/>
+</svg>
