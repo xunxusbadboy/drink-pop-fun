@@ -5,7 +5,7 @@ class DrinkApp extends StatelessWidget {
   const DrinkApp({super.key});
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'วันนี้ดื่มไรดี?', debugShowCheckedModeBanner: false,
+    title: 'ดื่มไรดี? | DRINK POP', debugShowCheckedModeBanner: false,
     theme: ThemeData(useMaterial3:true, scaffoldBackgroundColor: const Color(0xFFFFFAF1), colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFF337A)), fontFamily: null),
     home: const HomeScreen(),
   );
