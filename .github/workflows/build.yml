@@ -32,7 +32,7 @@ jobs:
           cache: true
 
       - name: Create platform files
-        run: flutter create --platforms=web,android .
+        run: flutter create --project-name drink_pop_fun --platforms=web,android .
 
       - name: Install dependencies
         run: flutter pub get
