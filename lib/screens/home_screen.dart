@@ -14,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   final picker = DrinkPicker(), store = FavoritesStore();
   String mood = 'ง่วงมาก', task = 'ปั่นงานด่วน';
+  String alcoholMode = 'none';
+  int sweetMl = 20;
   Drink? selected;
   Set<String> favorites = {};
   bool caffeineFree = false, rolling = false;
@@ -32,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     await bounce.forward(from: 0);
     if (!mounted) return;
     setState(() {
-      selected = picker.pick(drinks, mood, task, excludeId:selected?.id, caffeineFree:caffeineFree);
+      selected = picker.pick(drinks, mood, task, excludeId:selected?.id, caffeineFree:caffeineFree, alcoholMode:alcoholMode);
       tab = 0; rolling = false;
     });
     await Future<void>.delayed(const Duration(milliseconds: 80));
@@ -55,8 +57,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       Center(child:PopCup(size:150,color: d.caffeinated ? const Color(0xFFBF8CFF):pink)),
       const SizedBox(height:12),Text(d.name,textAlign:TextAlign.center,style:const TextStyle(fontSize:27,fontWeight:FontWeight.w900,color:ink)),
       Text(d.tagline,textAlign:TextAlign.center,style:const TextStyle(fontSize:16)),
-      const SizedBox(height:8),Center(child:Chip(label:Text(d.caffeinated?'☕ มีคาเฟอีน':'✨ ไม่มีคาเฟอีน'))),
-      const SizedBox(height:12),_heading('🛒 วัตถุดิบ'),...d.ingredients.map((s)=>Padding(padding:const EdgeInsets.only(bottom:5),child:Text('• $s'))),
+      const SizedBox(height:8),Center(child:Wrap(spacing:6,alignment:WrapAlignment.center,children:[Chip(label:Text(d.alcoholic?'🍸 มีแอลกอฮอล์':'🍹 ไม่มีแอลกอฮอล์')),Chip(label:Text(d.caffeinated?'☕ มีคาเฟอีน':'✨ ไม่มีคาเฟอีน')),Chip(label:Text('หวาน ${sweetMl == 10 ? 'น้อย' : sweetMl == 20 ? 'ปานกลาง' : 'มาก'}'))])),
+      const SizedBox(height:8),Text('ส่วนผสมหลัก: Señorita ${d.flavor}',textAlign:TextAlign.center,style:const TextStyle(fontWeight:FontWeight.w800,color:purple)),
+      const SizedBox(height:12),_heading('🛒 วัตถุดิบ'),...d.ingredients.map((s)=>Padding(padding:const EdgeInsets.only(bottom:5),child:Text('• ${s.replaceAll('{syrup}', sweetMl.toString())}'))),
       const SizedBox(height:14),_heading('🥄 วิธีทำ'),...d.steps.asMap().entries.map((e)=>Padding(padding:const EdgeInsets.only(bottom:8),child:Text('${e.key+1}. ${e.value}'))),
       const SizedBox(height:14),OutlinedButton.icon(onPressed:()=>_toggle(d),icon:Icon(favorites.contains(d.id)?Icons.favorite:Icons.favorite_border),label:Text(favorites.contains(d.id)?'บันทึกแล้ว 💖':'เก็บแก้วนี้ไว้')),
     ]));
@@ -77,11 +80,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ...List.generate(moods.length,(i)=>Padding(padding:const EdgeInsets.only(bottom:11),child:_option(moods[i],moodIcons[i],mood==moods[i],()=>setState((){mood=moods[i];selected=null;})))),
       const SizedBox(height:22),_heading('02 / วันนี้ต้องเจออะไร?'),
       ...List.generate(tasks.length,(i)=>Padding(padding:const EdgeInsets.only(bottom:11),child:_option(tasks[i],taskIcons[i],task==tasks[i],()=>setState((){task=tasks[i];selected=null;})))),
+      const SizedBox(height:20),_heading('03 / มีแอลกอฮอล์ไหม?'),
+      SegmentedButton<String>(segments:const [ButtonSegment(value:'none',label:Text('ไม่มี')),ButtonSegment(value:'yes',label:Text('มี')),ButtonSegment(value:'any',label:Text('อะไรก็ได้'))],selected:{alcoholMode},onSelectionChanged:(v)=>setState((){alcoholMode=v.first;selected=null;})),
+      if(alcoholMode!='none')const Padding(padding:EdgeInsets.only(top:8),child:Text('สำหรับผู้ใหญ่ตามกฎหมายเท่านั้น • ไม่ดื่มแล้วขับ • ไม่เหมาะกับเวลาทำงาน',style:TextStyle(fontSize:12,color:Colors.black54))),
+      const SizedBox(height:20),_heading('04 / หวานแค่ไหนดี?'),
+      SegmentedButton<int>(segments:const [ButtonSegment(value:10,label:Text('น้อย')),ButtonSegment(value:20,label:Text('ปานกลาง')),ButtonSegment(value:30,label:Text('มาก'))],selected:{sweetMl},onSelectionChanged:(v)=>setState((){sweetMl=v.first;})),
+      const Padding(padding:EdgeInsets.only(top:6,bottom:12),child:Text('ปริมาณไซรัปเป็นค่าเริ่มต้นสำหรับทดลองสูตร ปรับตามความเข้มข้นจริง',style:TextStyle(fontSize:12,color:Colors.black54))),
       SwitchListTile(contentPadding:EdgeInsets.zero,title:const Text('ขอแบบไม่มีคาเฟอีน',style:TextStyle(fontWeight:FontWeight.bold)),subtitle:const Text('เหมาะกับคนอยากเลี่ยงกาแฟและชา'),value:caffeineFree,onChanged:(v)=>setState((){caffeineFree=v;selected=null;})),
       const SizedBox(height:12),FilledButton.icon(onPressed:rolling?null:_roll,icon:Icon(rolling?Icons.hourglass_top:Icons.casino),label:Text(rolling?'กำลังเลือกแก้วเด็ด...':'สุ่มแก้วให้หน่อย!',style:const TextStyle(fontSize:20,fontWeight:FontWeight.w900)),style:FilledButton.styleFrom(backgroundColor:pink,foregroundColor:Colors.white,padding:const EdgeInsets.symmetric(vertical:22))),
       if(selected!=null)...[const SizedBox(height:28),_ResultAnchor(key:resultKey),_heading('🎉 แก้วของวันนี้!'),_drinkCard(selected!),const SizedBox(height:16),OutlinedButton.icon(onPressed:rolling?null:_roll,icon:const Icon(Icons.refresh),label:const Text('สุ่มใหม่อีกแก้ว'))],
-      const SizedBox(height:28),Text('รวม ${drinks.length} สูตร • ใช้ส่วนผสมทั่วไป • เมนูคาเฟอีนขึ้นกับวัตถุดิบและปริมาณจริง',style:const TextStyle(fontSize:12,color:Colors.black54)),
-      const Text('รายการวัตถุดิบไม่ได้ยืนยันราคา/สต็อกของ Villa Market กรุณาตรวจสอบก่อนซื้อ',style:TextStyle(fontSize:12,color:Colors.black54)),
+      const SizedBox(height:28),Text('รวม ${drinks.length} สูตรต้นแบบ Señorita (50 ไม่มีแอลกอฮอล์ / 30 มีแอลกอฮอล์) • ปรับสูตรก่อนใช้งานจริง',style:const TextStyle(fontSize:12,color:Colors.black54)),
+      const Text('สูตรต้นแบบ ไม่ใช่สูตรทางการของ Señorita • โปรดตรวจสอบวัตถุดิบและอายุผู้ดื่ม',style:TextStyle(fontSize:12,color:Colors.black54)),
     ])))));
 }
 class _ResultAnchor extends StatefulWidget {
